@@ -1,0 +1,46 @@
+# Local production-like stack: PostgreSQL 16 + the SHIFT app (API serving the built SPA) on http://localhost:4000
+#   COOKIE_SECRET=$(openssl rand -hex 32) docker compose up --build
+# First run seeds master content + the admin account (SEED_ON_START); set SEED_DEMO=true for sample clients.
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: shift
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-shift}
+      POSTGRES_DB: shift
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shift -d shift"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: postgres://shift:${POSTGRES_PASSWORD:-shift}@db:5432/shift
+      COOKIE_SECRET: ${COOKIE_SECRET:?set COOKIE_SECRET (openssl rand -hex 32)}
+      PUBLIC_URL: ${PUBLIC_URL:-}
+      SMTP_URL: ${SMTP_URL:-}
+      MAIL_FROM: ${MAIL_FROM:-SHIFT Coaching <hello@shiftwithedel.com>}
+      SEED_ON_START: "true"
+      SEED_DEMO: ${SEED_DEMO:-false}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-shift-admin-2026}
+      SEED_CLIENT_PASSWORD: ${SEED_CLIENT_PASSWORD:-shift-client-2026}
+      DEMO_TODAY: ${DEMO_TODAY:-}
+      # core formats dates/times in the server's local zone — keep it on the coach's timezone
+      TZ: ${TZ:-Asia/Dubai}
+    volumes:
+      - uploads:/data/uploads
+
+volumes:
+  pgdata:
+  uploads:

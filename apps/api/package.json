@@ -1,0 +1,44 @@
+{
+  "name": "@shift/api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "SHIFT Coaching production API — Fastify adapter over @shift/core with a PostgreSQL store",
+  "scripts": {
+    "dev": "tsx watch --clear-screen=false src/server.ts",
+    "start": "tsx src/server.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "db:push": "tsx src/db/migrate.ts",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:generate": "drizzle-kit generate --name init",
+    "db:seed": "tsx src/seed.ts"
+  },
+  "dependencies": {
+    "@fastify/cookie": "11.1.2",
+    "@fastify/cors": "11.3.0",
+    "@fastify/helmet": "13.1.1",
+    "@fastify/multipart": "10.1.2",
+    "@fastify/rate-limit": "11.2.0",
+    "@fastify/static": "10.1.5",
+    "@shift/core": "1.0.0",
+    "bcryptjs": "2.4.3",
+    "drizzle-orm": "0.45.3",
+    "fastify": "5.12.5",
+    "nodemailer": "10.0.16",
+    "pg": "8.23.0",
+    "tsx": "4.19.4"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "2.4.6",
+    "@types/node": "20.19.43",
+    "@types/nodemailer": "8.0.2",
+    "@types/pg": "8.11.15",
+    "drizzle-kit": "0.31.11",
+    "typescript": "5.6.3",
+    "vitest": "2.1.8"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

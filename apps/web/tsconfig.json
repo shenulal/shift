@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "../..",
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "types": ["vite/client"],
+    "paths": { "@shift/core": ["packages/core/src/index.ts"], "@shift/core/*": ["packages/core/src/*"], "@/*": ["apps/web/src/*"] }
+  },
+  "include": ["src", "../../packages/core/src"]
+}
